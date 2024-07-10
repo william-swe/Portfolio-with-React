@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -8,6 +8,7 @@ import {
   faStackOverflow,
 } from "@fortawesome/free-brands-svg-icons";
 import { Box, HStack } from "@chakra-ui/react";
+import { transform } from "framer-motion";
 
 const socials = [
   {
@@ -43,9 +44,42 @@ const Header = () => {
       });
     }
   };
+  
+  const [scrollY, setScrollY] = useState(0);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const prevScrollY = useRef(0);
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    setScrollY(currentScrollY);
+
+    if (currentScrollY > prevScrollY.current) {
+      setHeaderVisible(false); // Scrolling down, hide the header
+    } else if (currentScrollY < prevScrollY.current) {
+      setHeaderVisible(true); // Scrolling up, show the header
+    }
+
+    prevScrollY.current = currentScrollY;
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const box = document.getElementById("outerBox");
+    if (headerVisible) {
+      box.style.transform = "translateY(0)";
+    } else {
+      box.style.transform = "translateY(-200px)";
+    }
+  }, [headerVisible]);
 
   return (
     <Box
+      id="outerBox"
       position="fixed"
       top={0}
       left={0}
