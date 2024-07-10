@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import {
   Box,
@@ -29,7 +29,7 @@ const LandingSection = () => {
       comment: ""
     },
     onSubmit: (values, { resetForm }) => {
-      submit(values);
+      submit("", values);
       resetForm();
     },
     validationSchema: Yup.object({
@@ -45,6 +45,13 @@ const LandingSection = () => {
         .required('Comment is required')
     }),
   });
+
+  // useEffect to listen for changes in response and trigger alert
+  useEffect(() => {
+    if (response) {
+      onOpen(response.type, response.message);
+    }
+  }, [response]);
 
   return (
     <FullScreenSection
@@ -100,6 +107,7 @@ const LandingSection = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 >
+                  <option value="">Please select</option> {/* Provide a placeholder */}
                   <option value="hireMe">Freelance project proposal</option>
                   <option value="openSource">Open source consultancy session</option>
                   <option value="other">Other</option>
@@ -122,7 +130,7 @@ const LandingSection = () => {
                 <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
               </FormControl>
 
-              <Button type="submit" colorScheme="purple" width="full" isLoading={isLoading}>
+              <Button type="submit" colorScheme="purple" width="full" isLoading={isLoading} disabled={isLoading}>
                 Submit
               </Button>
             </VStack>
