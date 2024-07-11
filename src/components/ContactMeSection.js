@@ -34,15 +34,13 @@ const LandingSection = () => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
-        .min(2, 'First name must be at least 2 characters long')
-        .required('First name is required'),
+        .required('Required'),
       email: Yup.string()
         .email('Invalid email address')
-        .required('Email is required'),
-      type: Yup.string()
-        .required('Please select an enquiry type'),
+        .required('Required'),
       comment: Yup.string()
-        .required('Comment is required')
+        .min(25, 'Must be at least 25 characters')
+        .required('Required')
     }),
   });
 
@@ -52,6 +50,11 @@ const LandingSection = () => {
       onOpen(response.type, response.message);
     }
   }, [response]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    formik.handleSubmit();
+  }
 
   return (
     <FullScreenSection
@@ -65,7 +68,7 @@ const LandingSection = () => {
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
               <FormControl
                 isInvalid={formik.touched.firstName && !!formik.errors.firstName}
@@ -107,12 +110,10 @@ const LandingSection = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 >
-                  <option value="">Please select</option> {/* Provide a placeholder */}
                   <option value="hireMe">Freelance project proposal</option>
                   <option value="openSource">Open source consultancy session</option>
                   <option value="other">Other</option>
                 </Select>
-                <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
               </FormControl>
 
               <FormControl

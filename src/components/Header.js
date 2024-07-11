@@ -8,7 +8,6 @@ import {
   faStackOverflow,
 } from "@fortawesome/free-brands-svg-icons";
 import { Box, HStack } from "@chakra-ui/react";
-import { transform } from "framer-motion";
 
 const socials = [
   {
@@ -100,7 +99,7 @@ const Header = () => {
           <nav>
             <HStack spacing={5}>
               {socials.map((social) => (
-                <a href={social["url"]}>
+                <a href={social["url"]} target="_blank" rel="noreferrer">
                   <FontAwesomeIcon icon={social["icon"]} size="2x" />
                 </a>
               ))}
